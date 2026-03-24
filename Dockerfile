@@ -1,5 +1,5 @@
-# bulkRNA / 科研绘图「轻量版」：仅保留 ggplot2 + tidy 核心与常用拼图/主题/配色/少量图层扩展 + SVG 导出（svglite）。
-# 已去掉 ggpubr（易拖 shiny/forecast 等大依赖）、plotly、survminer、igraph、ragg、factoextra、ggtext/ggdist 等；需要时请改回中量版或自行追加包名。
+# bulkRNA / 科研绘图「轻量版」：ggplot2 + tidy 核心与常用拼图/主题/配色/少量图层扩展 + SVG 导出（svglite）+ ggpubr（可能连带 car、broom 等统计作图依赖）。
+# 仍不含 plotly、survminer、igraph、ragg、factoextra、ggtext/ggdist 等；需要时请自行追加包名。
 # libuv1-dev：减少 fs 装包时的 libuv 告警；Quay 构建超时请拆层或本地 build 后 push。
 # Quay 等平台导出的构建日志 *.json 勿提交仓库。
 #
@@ -10,7 +10,7 @@ FROM quay.io/1733295510/base-image:V1
 
 LABEL maintainer="1733295510 <1733295510@qq.com>"
 LABEL org.opencontainers.image.title="bulkRNA-ggplot-Plotting"
-LABEL org.opencontainers.image.description="Light ggplot2: core tidy + ggrepel, patchwork, cowplot, ggthemes, scales, viridis palettes, ggridges/ggforce, svglite (no plotly/survminer/igraph/ragg/ggpubr)."
+LABEL org.opencontainers.image.description="Light ggplot2: core tidy + ggrepel, patchwork, cowplot, ggthemes, scales, viridis palettes, ggridges/ggforce, ggpubr, svglite (no plotly/survminer/igraph/ragg)."
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
@@ -56,6 +56,7 @@ RUN R -e "nc <- suppressWarnings(as.integer(Sys.getenv('R_INSTALL_NCPUS', '4')))
       'RColorBrewer', \
       'colorspace', \
       'ggsci', \
+      'ggpubr', \
       'ggridges', \
       'ggforce', \
       'svglite'\
@@ -66,10 +67,12 @@ RUN R -e "nc <- suppressWarnings(as.integer(Sys.getenv('R_INSTALL_NCPUS', '4')))
     library(dplyr);\
     library(patchwork);\
     library(ggrepel);\
+    library(ggpubr);\
     library(svglite);\
   });\
   cat('ggplot-Plotting light OK: ggplot2', as.character(packageVersion('ggplot2')), \
-      ' patchwork', as.character(packageVersion('patchwork')), '\n')\
+      ' patchwork', as.character(packageVersion('patchwork')), \
+      ' ggpubr', as.character(packageVersion('ggpubr')), '\n')\
 "
 
 WORKDIR /work
