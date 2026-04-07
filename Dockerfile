@@ -6,7 +6,7 @@
 # 构建示例：
 #   docker build -t quay.io/1733295510/bulk-ggplot-plotting:light .
 
-FROM quay.io/1733295510/base-image:V1
+FROM quay.io/1733295510/base-image:V1.1
 
 LABEL maintainer="1733295510 <1733295510@qq.com>"
 LABEL org.opencontainers.image.title="bulkRNA-ggplot-Plotting"
