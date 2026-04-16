@@ -1,4 +1,4 @@
-# bulkRNA / 科研绘图「轻量版」：ggplot2 + tidy 核心与常用拼图/主题/配色/少量图层扩展 + SVG 导出（svglite）+ ggpubr（可能连带 car、broom 等统计作图依赖）。
+# bulkRNA / 科研绘图「轻量版」：ggplot2 + tidy 核心 + data.table + 常用拼图/主题/配色/少量图层扩展 + SVG 导出（svglite）+ ggpubr（可能连带 car、broom 等统计作图依赖）。
 # 仍不含 plotly、survminer、igraph、ragg、factoextra、ggtext/ggdist 等；需要时请自行追加包名。含 knitr、rmarkdown（与 base-image R 及 CRAN 一致）。
 # libuv1-dev：减少 fs 装包时的 libuv 告警；Quay 构建超时请拆层或本地 build 后 push。
 # Quay 等平台导出的构建日志 *.json 勿提交仓库。
@@ -10,7 +10,7 @@ FROM quay.io/1733295510/base-image:V1.1
 
 LABEL maintainer="1733295510 <1733295510@qq.com>"
 LABEL org.opencontainers.image.title="bulkRNA-ggplot-Plotting"
-LABEL org.opencontainers.image.description="Light ggplot2: core tidy + ggrepel, patchwork, cowplot, ggthemes, scales, viridis palettes, ggridges/ggforce, ggpubr, svglite, knitr, rmarkdown (no plotly/survminer/igraph/ragg)."
+LABEL org.opencontainers.image.description="Light ggplot2: core tidy + data.table + ggrepel, patchwork, cowplot, ggthemes, scales, viridis palettes, ggridges/ggforce, ggpubr, svglite, knitr, rmarkdown (no plotly/survminer/igraph/ragg)."
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
@@ -44,6 +44,7 @@ RUN R -e "nc <- suppressWarnings(as.integer(Sys.getenv('R_INSTALL_NCPUS', '4')))
       'readr', \
       'purrr', \
       'dplyr', \
+      'data.table', \
       'stringr', \
       'forcats', \
       'lubridate', \
@@ -67,6 +68,7 @@ RUN R -e "nc <- suppressWarnings(as.integer(Sys.getenv('R_INSTALL_NCPUS', '4')))
   suppressPackageStartupMessages({\
     library(ggplot2);\
     library(dplyr);\
+    library(data.table);\
     library(patchwork);\
     library(ggrepel);\
     library(ggpubr);\
@@ -75,6 +77,7 @@ RUN R -e "nc <- suppressWarnings(as.integer(Sys.getenv('R_INSTALL_NCPUS', '4')))
     library(rmarkdown);\
   });\
   cat('ggplot-Plotting light OK: ggplot2', as.character(packageVersion('ggplot2')), \
+      ' data.table', as.character(packageVersion('data.table')), \
       ' patchwork', as.character(packageVersion('patchwork')), \
       ' ggpubr', as.character(packageVersion('ggpubr')), \
       ' knitr', as.character(packageVersion('knitr')), \
